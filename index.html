@@ -45,6 +45,26 @@
             opacity: 1;
             pointer-events: auto;
         }
+
+        /* Toast notification */
+        #toast {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-20px);
+            background: #0f172a;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 99px;
+            font-size: 13px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        #toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-[#FAFAF8] text-slate-800 min-h-screen flex flex-col overflow-x-hidden">
@@ -60,12 +80,18 @@
             <span class="serif text-xl font-semibold tracking-tight text-slate-900 leading-none">sweety.bynhi</span>
         </a>
 
-            <a href="https://m.me/61577748808387" target="_blank" rel="noopener noreferrer"
-               class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 text-white text-sm font-medium hover:bg-slate-700 transition-all shadow-sm">
-                <iconify-icon icon="solar:chat-round-dots-bold" width="16"></iconify-icon>
-                Nhắn tin đặt bánh
-        
-            </a>
+            <div class="flex items-center gap-2 sm:gap-3">
+                <button onclick="scrollToBottom()" 
+                   class="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-all whitespace-nowrap">
+                    <iconify-icon icon="solar:link-circle-linear" width="18" class="hidden sm:inline"></iconify-icon>
+                    Nền tảng khác
+                </button>
+                <a href="https://m.me/61577748808387" target="_blank" rel="noopener noreferrer"
+                   class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 text-white text-sm font-medium hover:bg-slate-700 transition-all shadow-sm whitespace-nowrap">
+                    <iconify-icon icon="solar:chat-round-dots-bold" width="16"></iconify-icon>
+                    Nhắn tin đặt bánh
+                </a>
+            </div>
         </div>
     </header>
 
@@ -113,6 +139,14 @@
             <iconify-icon icon="solar:emoji-sad-circle-linear" width="48" class="mb-4 block mx-auto"></iconify-icon>
             Chưa có bánh trong danh mục này.
         </div>
+
+        <!-- Nút Xem thêm -->
+        <div id="load-more-container" class="mt-12 flex justify-center">
+            <button id="load-more-btn" onclick="loadMore()" 
+                    class="hidden px-8 py-3 rounded-full border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-all shadow-sm">
+                Xem thêm mẫu bánh
+            </button>
+        </div>
     </main>
 
     <!-- =================== FOOTER =================== -->
@@ -123,9 +157,9 @@
                 <span class="serif text-xl font-semibold text-slate-900">sweety.bynhi <span class="font-normal text-sm text-slate-400 ml-1">© 2025</span></span>
             </a>
             <div class="flex gap-6 text-sm text-slate-500">
-                <a href="#" class="hover:text-slate-900 transition-colors">Instagram</a>
-                <a href="#" class="hover:text-slate-900 transition-colors">Facebook</a>
-                <a href="https://m.me/61577748808387" target="_blank" class="hover:text-slate-900 transition-colors">Messenger</a>
+                <a href="https://www.tiktok.com/@sweety.bynhi?lang=vi-VN" target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 transition-colors">TikTok</a>
+                <a href="https://www.facebook.com/profile.php?id=61577748808387" target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 transition-colors">Facebook</a>
+                <a href="https://www.threads.net/@sweetyby.nhi?xmt=AQF0En4p_EjVsn3WDf22Hos-WvosNhJgadcspPRnC6gGxIg" target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 transition-colors">Threads</a>
             </div>
         </div>
     </footer>
@@ -144,16 +178,26 @@
                 <span id="modal-cat" class="text-[11px] font-medium uppercase tracking-widest text-amber-600 mb-2">Danh mục</span>
                 <h2 id="modal-name" class="serif text-2xl font-semibold text-slate-900 mb-6">Tên bánh</h2>
                 <div class="space-y-3">
-                    <a id="modal-order-btn" href="https://m.me/61577748808387" target="_blank" rel="noopener noreferrer"
+                    <a id="modal-order-btn" href="#" target="_blank" rel="noopener noreferrer"
                        class="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-slate-900 text-white text-sm font-medium hover:bg-slate-700 transition-all shadow-sm">
                         <iconify-icon icon="solar:chat-round-dots-bold" width="18"></iconify-icon>
-                        Đặt bánh này qua Messenger
+                        Gửi tin nhắn đặt bánh
                     </a>
-                    <p class="text-center text-xs text-slate-400">Nhắn tin để được tư vấn & báo giá chi tiết</p>
+                    
+                    <button onclick="copyToClipboard()" 
+                       class="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-xl border border-slate-200 text-slate-600 text-xs font-medium hover:bg-slate-50 transition-all">
+                        <iconify-icon icon="solar:copy-bold-duotone" width="16"></iconify-icon>
+                        Sao chép thông tin bánh (nếu tin nhắn trống)
+                    </button>
+
+                    <p class="text-center text-[10px] text-slate-400 mt-2 italic px-2">Lưu ý: Nếu Messenger không hiện sẵn tin nhắn, bạn vui lòng nhấn "Sao chép" rồi Dán vào ô chat.</p>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast">Đã sao chép thông tin bánh!</div>
 
     <!-- =================== FAB MESSENGER =================== -->
     <a id="fab-messenger" href="https://m.me/61577748808387" target="_blank" rel="noopener noreferrer"
@@ -337,11 +381,13 @@
             }
         };
 
+        let displayedLimit = 30;
+        let currentFilter = 'all';
+
         function renderProducts() {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = '';
             
-            // 1. Thu thập tất cả sản phẩm vào một mảng phẳng
             let allItems = [];
             Object.keys(config.products).forEach(cat => {
                 config.products[cat].forEach((file, i) => {
@@ -354,13 +400,11 @@
                 });
             });
 
-            // 2. Xáo trộn mảng (Fisher-Yates Shuffle)
             for (let i = allItems.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [allItems[i], allItems[j]] = [allItems[j], allItems[i]];
             }
 
-            // 3. Render mảng đã xáo trộn
             allItems.forEach(item => {
                 const card = document.createElement('article');
                 card.className = 'product-card group cursor-pointer';
@@ -374,32 +418,71 @@
                 `;
                 grid.appendChild(card);
             });
+
+            applyFilterAndPagination();
         }
 
         function filterCategory(cat, btn) {
+            currentFilter = cat;
+            displayedLimit = 30; // Reset lại giới hạn khi chuyển mục
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            const cards = document.querySelectorAll('.product-card');
-            let count = 0;
-            cards.forEach(c => {
-                const show = cat === 'all' || c.dataset.category === cat;
-                c.style.display = show ? '' : 'none';
-                if (show) count++;
-            });
-            document.getElementById('empty-msg').classList.toggle('hidden', count > 0);
+            applyFilterAndPagination();
         }
+
+        function applyFilterAndPagination() {
+            const cards = document.querySelectorAll('.product-card');
+            let visibleCount = 0;
+            let totalAvailableInCategory = 0;
+            
+            cards.forEach((card) => {
+                const isMatch = currentFilter === 'all' || card.dataset.category === currentFilter;
+                if (isMatch) {
+                    totalAvailableInCategory++;
+                    // Nếu là 'all' thì áp dụng giới hạn 30, 60... Nếu là mục nhỏ thì hiện hết
+                    const show = currentFilter !== 'all' || totalAvailableInCategory <= displayedLimit;
+                    card.style.display = show ? '' : 'none';
+                    if (show) visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Hiển thị/ẩn nút Xem thêm
+            const loadMoreBtn = document.getElementById('load-more-btn');
+            const hasMore = currentFilter === 'all' && totalAvailableInCategory > displayedLimit;
+            loadMoreBtn.classList.toggle('hidden', !hasMore);
+
+            document.getElementById('empty-msg').classList.toggle('hidden', totalAvailableInCategory > 0);
+        }
+
+        function loadMore() {
+            displayedLimit += 30;
+            applyFilterAndPagination();
+        }
+
+        let currentProductInfo = "";
 
         function openModal(name, img, cat) {
             document.getElementById('modal-name').innerText = name;
             document.getElementById('modal-img').src = img;
             document.getElementById('modal-cat').innerText = cat;
 
-            // Tạo link ảnh tuyệt đối để Messenger tự động hiện xem trước ảnh (preview)
-            const baseUrl = window.location.href.split('index.html')[0].split('#')[0];
+            // Tính toán link ảnh tuyệt đối
+            let baseUrl = window.location.origin + window.location.pathname;
+            if (!baseUrl.endsWith('/')) {
+                baseUrl = baseUrl.substring(0, baseUrl.lastIndexOf('/') + 1);
+            }
             const fullImgUrl = baseUrl + img;
-            const msg = encodeURIComponent(`Chào shop, mình muốn đặt bánh "${name}". \n\nMẫu ảnh: ${fullImgUrl}`);
             
-            document.getElementById('modal-order-btn').href = `https://m.me/61577748808387?text=${msg}`;
+            // Thông tin để copy hoặc gửi
+            const messageText = `Chào shop, mình muốn đặt bánh: ${name}\nLink mẫu: ${fullImgUrl}`;
+            currentProductInfo = messageText;
+
+            // Link Messenger (sử dụng link thay thế cho mobile app ổn định hơn)
+            const encodedMsg = encodeURIComponent(messageText);
+            document.getElementById('modal-order-btn').href = `https://www.facebook.com/messages/t/61577748808387?text=${encodedMsg}`;
+            
             document.getElementById('product-modal').classList.remove('opacity-0', 'pointer-events-none');
             const box = document.getElementById('modal-box');
             requestAnimationFrame(() => {
@@ -407,6 +490,14 @@
                 box.classList.add('opacity-100', 'scale-100');
             });
             document.body.style.overflow = 'hidden';
+        }
+
+        function copyToClipboard() {
+            navigator.clipboard.writeText(currentProductInfo).then(() => {
+                const toast = document.getElementById('toast');
+                toast.className = 'show';
+                setTimeout(() => { toast.className = ''; }, 2500);
+            });
         }
 
         function closeModal() {
@@ -431,6 +522,10 @@
 
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToBottom() {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
