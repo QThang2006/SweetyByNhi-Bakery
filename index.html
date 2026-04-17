@@ -340,22 +340,39 @@
         function renderProducts() {
             const grid = document.getElementById('product-grid');
             grid.innerHTML = '';
+            
+            // 1. Thu thập tất cả sản phẩm vào một mảng phẳng
+            let allItems = [];
             Object.keys(config.products).forEach(cat => {
                 config.products[cat].forEach((file, i) => {
-                    const name = `${config.categories[cat]} mẫu ${i + 1}`;
-                    const path = `images/${cat}/${file}`;
-                    const card = document.createElement('article');
-                    card.className = 'product-card group cursor-pointer';
-                    card.dataset.category = cat;
-                    card.onclick = () => openModal(name, path, config.categories[cat]);
-                    card.innerHTML = `
-                        <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-slate-100 border border-slate-200/50 mb-3">
-                            <img src="${path}" alt="${name}" class="cake-img object-cover w-full h-full">
-                        </div>
-                        <h3 class="serif text-base font-medium text-slate-900 mb-0.5">${name}</h3>
-                    `;
-                    grid.appendChild(card);
+                    allItems.push({
+                        cat: cat,
+                        file: file,
+                        name: `${config.categories[cat]} mẫu ${i + 1}`,
+                        path: `images/${cat}/${file}`
+                    });
                 });
+            });
+
+            // 2. Xáo trộn mảng (Fisher-Yates Shuffle)
+            for (let i = allItems.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [allItems[i], allItems[j]] = [allItems[j], allItems[i]];
+            }
+
+            // 3. Render mảng đã xáo trộn
+            allItems.forEach(item => {
+                const card = document.createElement('article');
+                card.className = 'product-card group cursor-pointer';
+                card.dataset.category = item.cat;
+                card.onclick = () => openModal(item.name, item.path, config.categories[item.cat]);
+                card.innerHTML = `
+                    <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-slate-100 border border-slate-200/50 mb-3">
+                        <img src="${item.path}" alt="${item.name}" class="cake-img object-cover w-full h-full">
+                    </div>
+                    <h3 class="serif text-base font-medium text-slate-900 mb-0.5">${item.name}</h3>
+                `;
+                grid.appendChild(card);
             });
         }
 
