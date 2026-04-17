@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sweety.bynhi — Cửa Hàng Bánh Handmade</title>
+    <meta name="description" content="sweety.bynhi — Những chiếc bánh handmade tinh tế làm từ nguyên liệu thượng hạng. Đặt hàng qua Messenger.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        h1, h2, h3, .serif { font-family: 'Playfair Display', serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* Hover zoom ảnh */
+        .cake-img { transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); }
+        .product-card:hover .cake-img { transform: scale(1.06); }
+
+        /* Modal animation */
+        #product-modal { transition: opacity 0.25s ease; }
+        #modal-box { transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease; }
+
+        /* Filter active */
+        .filter-btn.active { background: #0f172a; color: #fff; border-color: #0f172a; }
+
+        /* Floating Messenger button */
+        @keyframes bounce-subtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+        #fab-messenger { animation: bounce-subtle 2.5s ease-in-out infinite; }
+        #fab-messenger:hover { animation: none; transform: scale(1.1); }
+
+        /* Scroll to top button */
+        #scroll-top-btn { 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(20px);
+            opacity: 0;
+            pointer-events: none;
+        }
+        #scroll-top-btn.visible { 
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+    </style>
+</head>
+<body class="bg-[#FAFAF8] text-slate-800 min-h-screen flex flex-col overflow-x-hidden">
+
+    <!-- =================== HEADER =================== -->
+    <header class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/60">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-2.5">
+            <!-- Logo: đặt file ảnh vào images/logo.png (khuyến nghị 80x80px, nền trong suốt) -->
+            <img src="images/logo.png" alt="sweety.bynhi logo"
+                 onerror="this.style.display='none'"
+                 class="h-9 w-9 object-contain rounded-full">
+            <span class="serif text-xl font-semibold tracking-tight text-slate-900 leading-none">sweety.bynhi</span>
+        </a>
+
+            <a href="https://m.me/61577748808387" target="_blank" rel="noopener noreferrer"
+               class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 text-white text-sm font-medium hover:bg-slate-700 transition-all shadow-sm">
+                <iconify-icon icon="solar:chat-round-dots-bold" width="16"></iconify-icon>
+                Nhắn tin đặt bánh
+        
+            </a>
+        </div>
+    </header>
+
+    <!-- =================== HERO =================== -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-10 text-center">
+        <!-- Logo lớn ở Hero (tuỳ chọn) -->
+        <img src="images/logo.png" alt="sweety.bynhi"
+             onerror="this.style.display='none'"
+             class="h-20 w-20 object-contain rounded-full mx-auto mb-6 shadow-md">
+        <p class="text-xs font-medium tracking-widest uppercase text-amber-600 mb-4">Handmade · Thượng hạng · Tươi mỗi ngày</p>
+        <h1 class="serif text-4xl md:text-5xl lg:text-6xl font-semibold text-slate-900 leading-tight mb-5">
+            sweety.bynhi
+        </h1>
+        <p class="text-slate-500 text-base max-w-xl mx-auto leading-relaxed">
+            Mỗi chiếc bánh là một tác phẩm — được làm thủ công từ nguyên liệu nhập khẩu.<br>
+            Xem, chọn, và nhắn tin cho chúng tôi để đặt hàng.
+        </p>
+    </section>
+
+    <!-- =================== FILTER =================== -->
+    <section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
+        <div id="filter-bar" class="flex flex-wrap items-center justify-center gap-2">
+            <button onclick="filterCategory('all', this)" class="filter-btn active px-5 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-sm font-medium transition-all">Tất cả</button>
+            <button onclick="filterCategory('panacotta', this)" class="filter-btn px-5 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-sm font-medium hover:border-slate-400 transition-all">🍮 Panna Cotta</button>
+            <button onclick="filterCategory('tiramisu', this)" class="filter-btn px-5 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-sm font-medium hover:border-slate-400 transition-all">🍰 Tiramisu</button>
+            <button onclick="filterCategory('saltedEggSpongeCake', this)" class="filter-btn px-5 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-sm font-medium hover:border-slate-400 transition-all">🥯 Bông Lan Trứng Muối</button>
+            <button onclick="filterCategory('bakeryForGirl', this)" class="filter-btn px-5 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-sm font-medium hover:border-slate-400 transition-all">👧 Bánh Bé Gái</button>
+            <button onclick="filterCategory('bakeryForBoy', this)" class="filter-btn px-5 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-sm font-medium hover:border-slate-400 transition-all">👦 Bánh Bé Trai</button>
+            <button onclick="filterCategory('bakeryAndFlower', this)" class="filter-btn px-5 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-sm font-medium hover:border-slate-400 transition-all">🌸 Bánh & Hoa</button>
+            <button onclick="filterCategory('shapedDecorativeCake', this)" class="filter-btn px-5 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-sm font-medium hover:border-slate-400 transition-all">🎨 Bánh Tạo Hình</button>
+            <button onclick="filterCategory('2TierCake', this)" class="filter-btn px-5 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-sm font-medium hover:border-slate-400 transition-all">🎂 Bánh 2 Tầng</button>
+            <button onclick="filterCategory('burningCake', this)" class="filter-btn px-5 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-sm font-medium hover:border-slate-400 transition-all">🔥 Bánh Đốt</button>
+            <button onclick="filterCategory('fortuneGodCakeGrandOpening', this)" class="filter-btn px-5 py-2 rounded-full border border-slate-200 bg-white text-slate-600 text-sm font-medium hover:border-slate-400 transition-all">🧧 Bánh Khai Trương</button>
+        </div>
+    </section>
+
+    <!-- =================== PRODUCT GRID =================== -->
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-28 flex-grow w-full">
+        <div id="product-grid" class="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+            <!-- Sản phẩm sẽ được render tự động từ dữ liệu JS -->
+        </div>
+
+        <!-- Khi lọc mà không có sản phẩm -->
+        <div id="empty-msg" class="hidden text-center py-20 text-slate-400">
+            <iconify-icon icon="solar:emoji-sad-circle-linear" width="48" class="mb-4 block mx-auto"></iconify-icon>
+            Chưa có bánh trong danh mục này.
+        </div>
+    </main>
+
+    <!-- =================== FOOTER =================== -->
+    <footer class="border-t border-slate-200/60 bg-white py-8">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <a href="#" class="flex items-center gap-2">
+                <img src="images/logo.png" alt="logo" onerror="this.style.display='none'" class="h-7 w-7 object-contain rounded-full">
+                <span class="serif text-xl font-semibold text-slate-900">sweety.bynhi <span class="font-normal text-sm text-slate-400 ml-1">© 2025</span></span>
+            </a>
+            <div class="flex gap-6 text-sm text-slate-500">
+                <a href="#" class="hover:text-slate-900 transition-colors">Instagram</a>
+                <a href="#" class="hover:text-slate-900 transition-colors">Facebook</a>
+                <a href="https://m.me/61577748808387" target="_blank" class="hover:text-slate-900 transition-colors">Messenger</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- =================== PRODUCT DETAIL MODAL =================== -->
+    <div id="product-modal" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center opacity-0 pointer-events-none">
+        <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-sm" onclick="closeModal()"></div>
+        <div id="modal-box" class="relative bg-white w-full sm:max-w-3xl sm:mx-4 sm:rounded-2xl overflow-hidden flex flex-col sm:flex-row max-h-[90vh] opacity-0 scale-95 shadow-2xl rounded-t-2xl">
+            <button onclick="closeModal()" class="absolute top-3 right-3 z-10 bg-white/80 backdrop-blur text-slate-500 hover:text-slate-900 w-9 h-9 rounded-full flex items-center justify-center shadow">
+                <iconify-icon icon="solar:close-circle-linear" width="22"></iconify-icon>
+            </button>
+            <div class="w-full sm:w-2/5 bg-slate-100 aspect-square sm:aspect-auto flex-shrink-0">
+                <img id="modal-img" src="" alt="" class="object-cover w-full h-full">
+            </div>
+            <div class="flex-1 p-6 sm:p-8 flex flex-col justify-center overflow-y-auto no-scrollbar">
+                <span id="modal-cat" class="text-[11px] font-medium uppercase tracking-widest text-amber-600 mb-2">Danh mục</span>
+                <h2 id="modal-name" class="serif text-2xl font-semibold text-slate-900 mb-6">Tên bánh</h2>
+                <div class="space-y-3">
+                    <a id="modal-order-btn" href="https://m.me/61577748808387" target="_blank" rel="noopener noreferrer"
+                       class="w-full flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-slate-900 text-white text-sm font-medium hover:bg-slate-700 transition-all shadow-sm">
+                        <iconify-icon icon="solar:chat-round-dots-bold" width="18"></iconify-icon>
+                        Đặt bánh này qua Messenger
+                    </a>
+                    <p class="text-center text-xs text-slate-400">Nhắn tin để được tư vấn & báo giá chi tiết</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =================== FAB MESSENGER =================== -->
+    <a id="fab-messenger" href="https://m.me/61577748808387" target="_blank" rel="noopener noreferrer"
+       title="Nhắn tin đặt bánh"
+       class="fixed bottom-6 right-5 z-50 w-14 h-14 bg-slate-900 rounded-full flex items-center justify-center shadow-xl text-white hover:bg-slate-700 transition-colors">
+        <iconify-icon icon="logos:messenger" width="28"></iconify-icon>
+    </a>
+
+    <!-- =================== SCROLL TO TOP =================== -->
+    <button id="scroll-top-btn" onclick="scrollToTop()" 
+            class="fixed bottom-24 right-5 z-50 w-12 h-12 bg-white border border-slate-200 rounded-full flex items-center justify-center shadow-lg text-slate-500 hover:text-slate-900 hover:border-slate-400 transition-all">
+        <iconify-icon icon="solar:arrow-up-linear" width="24"></iconify-icon>
+    </button>
+
+    <!-- =================== JAVASCRIPT =================== -->
+    <script>
+        const config = {
+            categories: {
+                'panacotta': 'Panna Cotta',
+                'tiramisu': 'Tiramisu',
+                'saltedEggSpongeCake': 'Bông Lan Trứng Muối',
+                'bakeryAndFlower': 'Bánh & Hoa',
+                'bakeryForBoy': 'Bánh Bé Trai',
+                'bakeryForGirl': 'Bánh Bé Gái',
+                '2TierCake': 'Bánh 2 Tầng',
+                'shapedDecorativeCake': 'Bánh Tạo Hình',
+                'burningCake': 'Bánh Đốt',
+                'fortuneGodCakeGrandOpening': 'Bánh Khai Trương'
+            },
+            products: {
+                'panacotta': [
+                    'z7735607301821_fe1a835f50565d470f6167ceb7918a4e.jpg',
+                    'z7735607332632_c4c0cd125942907c49916c065000f1cc.jpg',
+                    'z7735607395970_19ca55cc7dd14277fb27b77594bdc875.jpg',
+                    'z7735607398030_259372554df2839588ba90d3b466af08.jpg',
+                    'z7735607463485_adbd8aa9e0af2d1e9ad29f2c18ca723a.jpg',
+                    'z7735607487657_0f3b23ee5d50c0e6607b5778e5c9a7f9.jpg',
+                    'z7735607507907_d56503a07721f6898d2c7d7cd4ff6b1f.jpg',
+                    'z7735607524163_0e465b3ed280a55b8836a3cf9048fb7a.jpg',
+                    'z7735607541878_635d2d3c4b1bc3eb73642b5272258e2f.jpg',
+                    'z7735607553866_227d82684f36d5568d9eac4d522f61eb.jpg',
+                    'z7735607561775_1985d8614d0c513219e6ba94be2256eb.jpg',
+                    'z7735607566570_c3d1e0776b9825aef441d0cd5fe01f13.jpg',
+                    'z7735607579857_0d6b8122bb0fea4a1d0a0da2a399a37f.jpg',
+                    'z7735607591085_bc7948fa4df85a2c81fef7563fdbdda8.jpg',
+                    'z7735607601399_8e7e61d8dc73e62a65c0c8c523f8f614.jpg'
+                ],
+                'tiramisu': [
+                    'z7735613865358_2d376d32558886531ffeccb0af28ebcf.jpg',
+                    'z7735613905065_b9bd8d280965aefc807b05d3651add7f.jpg',
+                    'z7735613915187_9b0705bf82196ff5d388eb8c5bb58faa.jpg',
+                    'z7735613923513_efae51afe9cb95bd3548c22508e5a6dd.jpg',
+                    'z7735613937733_2bc61cc97cfc0e214f923c82515cfaa4.jpg',
+                    'z7735613945666_20a5283bcd257cb4f2a42270c548e78b.jpg',
+                    'z7735613965488_08d63eecbde0f38aa54af2e762bdd3b3.jpg',
+                    'z7735613968705_447af4b919a72caeb88697c6951fa818.jpg',
+                    'z7735613978174_8e036339a09d1e081ef197b719732518.jpg',
+                    'z7735613987671_4322bfd68c265af0b9f9af6088919013.jpg',
+                    'z7735613990286_16041e35e6833e65925d9d9dd0c86203.jpg',
+                    'z7735613998320_bb795b7cbc0939f27be373c5ae8f680b.jpg',
+                    'z7735614051903_5718d428d0f8a9199958c05253b993a6.jpg',
+                    'z7735614093866_e68eac17b2a86ea4f3515129135bbca8.jpg'
+                ],
+                'saltedEggSpongeCake': [
+                    'z7735675168883_cdf7954f709c2cfea772fd021cd31618.jpg',
+                    'z7735675198667_34c47193312efd9885a6ed4b58964f64.jpg',
+                    'z7735675213984_1c0dbee8ceea42091400e91dd0b107df.jpg',
+                    'z7735675223474_84addf7dc222483a299019132f0970df.jpg',
+                    'z7735675225635_f9fc71b31a274075ecc2f13e25933dcb.jpg',
+                    'z7735675233776_f9949dc5e44a2865d8e8baf510ba7b23.jpg',
+                    'z7735675234851_10bc745dd174d2de22634e995e11f740.jpg',
+                    'z7735675241752_3e603c0168de86d97ce7533379fe98eb.jpg',
+                    'z7735675252336_51eb6f7913c694d07234d2b3c8eca2c0.jpg',
+                    'z7735675257561_65cad8096f1a433f5cd57351353e4db2.jpg',
+                    'z7735675268350_449c7c0dc9dc1becbbf8fcd75a06d2c2.jpg',
+                    'z7735675295493_6240d978b7dd2cda7db96e6201154cf8.jpg'
+                ],
+                'bakeryAndFlower': [
+                    'z7735624135443_efcb828d185aa5f59ecc8f1eb5efab73.jpg',
+                    'z7735624150578_b678342b414c01e03a71be06ec38b86e.jpg',
+                    'z7735624199521_2c337bc11d7da98aa4d44f582ea85dae.jpg',
+                    'z7735624210697_0a3b6cf64c0b8068ed4b3ddf1c6c6be9.jpg',
+                    'z7735636532452_264d0bdeda72e5046088c5ab76714e28.jpg',
+                    'z7735636546492_44ebf72c197e8189450be224c07edb0a.jpg',
+                    'z7735636550472_7e2f271760296a18cd040937871dd82b.jpg',
+                    'z7735636556478_95732808b80ebac84eee07db2933f6ef.jpg',
+                    'z7735636564903_e937704c9ee0d5884ccfa56a6e046ecc.jpg'
+                ],
+                'bakeryForGirl': [
+                    'z7735644718987_2f821c9a7cd86abc795f60429a766ac8.jpg',
+                    'z7735644739073_06b8797252077f2c961791b955e29c31.jpg',
+                    'z7735644755950_30ad80d55481d7601efc8179fde984c8.jpg',
+                    'z7735644759489_8aa967b55695120f69da7d4b2a0993cf.jpg',
+                    'z7735644781804_e4b5de055ea98591d6664eb58ce1c4b5.jpg',
+                    'z7735644790704_051ca75ae7cc96d78d8bd805e746fd3d.jpg',
+                    'z7735644817158_a593bb368eb02d6dff75e4494630534c.jpg',
+                    'z7735644821538_55a71effc39876c32779797a4c8b0323.jpg',
+                    'z7735644854541_65c9307946b2a507d013075c9336fc62.jpg',
+                    'z7735644887207_d47bf14713bb821c93dee32a618597ad.jpg',
+                    'z7735644898196_80b2458c1752e8dd7441693ccb729085.jpg',
+                    'z7735644910324_c31b2c6c7d6478e98135960c29228089.jpg',
+                    'z7735644951461_3b1eecc6ccbb22bd8b399fbca4095198.jpg',
+                    'z7735644963378_b60a215cc24a2593f34c3e5d02d02d1c.jpg',
+                    'z7735644974153_a6d15b591660911ee5e8f6f8df990051.jpg',
+                    'z7735645003592_38e4390f3e4bdc960c1052d241308917.jpg',
+                    'z7735645014298_cb357e54adf5bc3e27764b2f929a2948.jpg',
+                    'z7735646963021_db2c2231809280d2740d774290714705.jpg',
+                    'z7735646982702_af0ff783f7035f66aa18a09f95127de6.jpg',
+                    'z7735646988835_f28146ab5a6ef4944eb585156f30aa38.jpg',
+                    'z7735647037378_accf48e9287ef71c30aa4ffe24c8f22b.jpg',
+                    'z7735647069431_dea3078a848fdd09a54d0a5870ddddc1.jpg',
+                    'z7735647070365_81e2403821d1bcd7ef5b54651f8b1970.jpg'
+                ],
+                'bakeryForBoy': [
+                    'z7735659214720_3b1eecc6ccbb22bd8b399fbca4095198.jpg',
+                    'z7735659227476_00afc1cad977630a63e73dcb8ef50ce9.jpg',
+                    'z7735659237371_8d4e58aa5421d5fdf7e6ddf418d34b47.jpg',
+                    'z7735659238135_d1a4011db172762c74d00f421c934dd0.jpg',
+                    'z7735659248686_5384b81645b87b11a5d6bebf8367dfe0.jpg',
+                    'z7735659259238_02c4ee5d926d4fffc06ea92163913f64.jpg',
+                    'z7735659268276_ac5c22b75734535f59438219a7b331c9.jpg',
+                    'z7735659275368_86afe42f59dc07bcb9285da460314b03.jpg',
+                    'z7735659281452_d9993cef84b450d88cea5abf83706bda.jpg',
+                    'z7735659407519_8657ca3b13e61a3e551eddd0ccd7001d.jpg',
+                    'z7735659418510_60e73b96876205827c5333e5061807bb.jpg',
+                    'z7735659428298_6ec19f51783d0a961c00c9ee5f143b74.jpg',
+                    'z7735659443050_60de3dfa85dde6b915efb3b98218d172.jpg'
+                ],
+                'shapedDecorativeCake': [
+                    'z7735673262231_74e4d89156769121f448bc09c2300d41.jpg',
+                    'z7735673278629_c91eafc1dc68512a350f51953948011e.jpg',
+                    'z7735673284785_1296bac094df479b8e969ac1c7f7396f.jpg',
+                    'z7735673302834_7e1f6d6b21e3477d9e22880648861124.jpg',
+                    'z7735673313979_644d86cae2d1f56b475d1290595025fc.jpg',
+                    'z7735673318117_390969a5531603897ccea93b8c8bee75.jpg',
+                    'z7735673331111_2a28279573535dcdffdfec3372a84c4d.jpg',
+                    'z7735673340787_58b5ac3212237866bb166373ba33d784.jpg',
+                    'z7735673341465_79cd0f5aaa99db675b454ca9497ab450.jpg',
+                    'z7735673344367_ae5f715dc317aa38cc283393b95e1321.jpg',
+                    'z7735673351152_c36d09cba1243a3f0d17ece0611293e1.jpg',
+                    'z7735673358112_535010992a25f23b6c7f56fdbd43370f.jpg',
+                    'z7735673369085_b2578f7389ab3d9ef37f02266c041be7.jpg',
+                    'z7735673375209_38f735d16402e2e90b22ce421e730c81.jpg'
+                ],
+                '2TierCake': [
+                    'z7735690864070_adc3c281203502189fcfb0dc7ac573e3.jpg',
+                    'z7735690894944_27651c161e7cb6f66f3d3614df0c30e8.jpg',
+                    'z7735690900479_0cab3bb7775ea7bd33b8ad6e631bdcc1.jpg',
+                    'z7735690909953_d1b80929a2e9e9a6a0966864e8ccfb57.jpg',
+                    'z7735690918265_50954c8c19167a5b33c1a1de75a11fb6.jpg',
+                    'z7735690923252_fd3c40f56fdd694e40cd5b21bda2a152.jpg',
+                    'z7735690929159_ba4e5ce0dd8b7da6d16b8da03af53d12.jpg',
+                    'z7735690938938_47fdff0fc91c63f8459e5076835c3284.jpg',
+                    'z7735690939274_f4ea8cf9ec954573fc70cffad3a79cc1.jpg',
+                    'z7735690943411_531d660ac72e227388b9ae3303a979a4.jpg',
+                    'z7735690950794_3f4a3e714400a380b177ec0bfb670bc0.jpg',
+                    'z7735690958132_4554edb8c7f76f93c869aa0101bac8d9.jpg',
+                    'z7735690964830_848640c3f9ffa4b315e3a030c530a06a.jpg'
+                ],
+                'burningCake': [
+                    'z7735683849226_437218bd12c215722d3c1ddbfae42a80.jpg',
+                    'z7735683851385_32274e5710efedc78748847f6691f93f.jpg',
+                    'z7735683856325_f40734838894e3c82230e8b6277c6f4e.jpg',
+                    'z7735683871516_a087d031ae68ca93c2e9007ae2b57550.jpg',
+                    'z7735683880943_51fa132a8c04c7e58a15bcc6f47cd540.jpg',
+                    'z7735683913544_3fc1f381a7c120b9ec983a5896bb2229.jpg',
+                    'z7735683913857_57f27a7a250ed4f4177352a659f1e7df.jpg',
+                    'z7735683926023_732b2657edd4db8f194211590a93ecba.jpg'
+                ],
+                'fortuneGodCakeGrandOpening': [
+                    'z7735679494324_7fd446127783c6d0b63ced201b8af032.jpg',
+                    'z7735679495600_05f1fc6222bb40ab81eaee2e559924c4.jpg',
+                    'z7735679508954_dbc6d8106ce53f57511a2ec13db35a40.jpg',
+                    'z7735679532786_93dc73bdea9a7dbfda1119a50f58a2ce.jpg',
+                    'z7735679549568_8196968c78007138b1f26d93ca0c8dc4.jpg',
+                    'z7735679553821_f22eea1a3bfcd47260f1d9d10590a4f1.jpg',
+                    'z7735679571449_19296c72e27c297f7532a997d88f1e7e.jpg',
+                    'z7735679602160_e82e2ab575e28ec72c05ec7844bceb2b.jpg',
+                    'z7735679614323_a378144137e9b0c9cd24c77d3b1ee522.jpg'
+                ]
+            }
+        };
+
+        function renderProducts() {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+            Object.keys(config.products).forEach(cat => {
+                config.products[cat].forEach((file, i) => {
+                    const name = `${config.categories[cat]} mẫu ${i + 1}`;
+                    const path = `images/${cat}/${file}`;
+                    const card = document.createElement('article');
+                    card.className = 'product-card group cursor-pointer';
+                    card.dataset.category = cat;
+                    card.onclick = () => openModal(name, path, config.categories[cat]);
+                    card.innerHTML = `
+                        <div class="relative overflow-hidden rounded-2xl aspect-[3/4] bg-slate-100 border border-slate-200/50 mb-3">
+                            <img src="${path}" alt="${name}" class="cake-img object-cover w-full h-full">
+                        </div>
+                        <h3 class="serif text-base font-medium text-slate-900 mb-0.5">${name}</h3>
+                    `;
+                    grid.appendChild(card);
+                });
+            });
+        }
+
+        function filterCategory(cat, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            const cards = document.querySelectorAll('.product-card');
+            let count = 0;
+            cards.forEach(c => {
+                const show = cat === 'all' || c.dataset.category === cat;
+                c.style.display = show ? '' : 'none';
+                if (show) count++;
+            });
+            document.getElementById('empty-msg').classList.toggle('hidden', count > 0);
+        }
+
+        function openModal(name, img, cat) {
+            document.getElementById('modal-name').innerText = name;
+            document.getElementById('modal-img').src = img;
+            document.getElementById('modal-cat').innerText = cat;
+            const msg = encodeURIComponent(`Chào shop, mình muốn hỏi về bánh "${name}".`);
+            document.getElementById('modal-order-btn').href = `https://m.me/61577748808387?text=${msg}`;
+            document.getElementById('product-modal').classList.remove('opacity-0', 'pointer-events-none');
+            const box = document.getElementById('modal-box');
+            requestAnimationFrame(() => {
+                box.classList.remove('opacity-0', 'scale-95');
+                box.classList.add('opacity-100', 'scale-100');
+            });
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const box = document.getElementById('modal-box');
+            box.classList.add('opacity-0', 'scale-95');
+            box.classList.remove('opacity-100', 'scale-100');
+            setTimeout(() => {
+                document.getElementById('product-modal').classList.add('opacity-0', 'pointer-events-none');
+                document.body.style.overflow = '';
+            }, 250);
+        }
+
+        // SCROLL TO TOP LOGIC
+        const scrollTopBtn = document.getElementById('scroll-top-btn');
+        window.onscroll = function() {
+            if (document.body.scrollTop > 400 || document.documentElement.scrollTop > 400) {
+                scrollTopBtn.classList.add('visible');
+            } else {
+                scrollTopBtn.classList.remove('visible');
+            }
+        };
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+        document.addEventListener('DOMContentLoaded', renderProducts);
+    </script>
+</body>
+</html>
