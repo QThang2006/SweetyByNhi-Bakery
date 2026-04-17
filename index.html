@@ -393,7 +393,12 @@
             document.getElementById('modal-name').innerText = name;
             document.getElementById('modal-img').src = img;
             document.getElementById('modal-cat').innerText = cat;
-            const msg = encodeURIComponent(`Chào shop, mình muốn hỏi về bánh "${name}".`);
+
+            // Tạo link ảnh tuyệt đối để Messenger tự động hiện xem trước ảnh (preview)
+            const baseUrl = window.location.href.split('index.html')[0].split('#')[0];
+            const fullImgUrl = baseUrl + img;
+            const msg = encodeURIComponent(`Chào shop, mình muốn đặt bánh "${name}". \n\nMẫu ảnh: ${fullImgUrl}`);
+            
             document.getElementById('modal-order-btn').href = `https://m.me/61577748808387?text=${msg}`;
             document.getElementById('product-modal').classList.remove('opacity-0', 'pointer-events-none');
             const box = document.getElementById('modal-box');
