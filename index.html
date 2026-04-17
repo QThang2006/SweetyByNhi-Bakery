@@ -74,23 +74,18 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
             <a href="#" class="flex items-center gap-2.5">
             <!-- Logo: đặt file ảnh vào images/logo.png (khuyến nghị 80x80px, nền trong suốt) -->
-            <img src="images/logo.png" alt="sweety.bynhi logo"
-                 onerror="this.style.display='none'"
+                <img src="images/logo.png" alt="sweety.bynhi logo"
+                     onerror="this.style.display='none'"
                  class="h-9 w-9 object-contain rounded-full">
             <span class="serif text-xl font-semibold tracking-tight text-slate-900 leading-none">sweety.bynhi</span>
-        </a>
+            </a>
 
             <div class="flex items-center gap-2 sm:gap-3">
                 <button onclick="scrollToBottom()" 
-                   class="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-all whitespace-nowrap">
-                    <iconify-icon icon="solar:link-circle-linear" width="18" class="hidden sm:inline"></iconify-icon>
+                   class="flex items-center gap-2 px-3 sm:px-4 py-2 rounded-full border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-all shadow-sm">
+                    <iconify-icon icon="solar:link-circle-linear" width="20"></iconify-icon>
                     Nền tảng khác
                 </button>
-                <a href="https://m.me/61577748808387" target="_blank" rel="noopener noreferrer"
-                   class="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900 text-white text-sm font-medium hover:bg-slate-700 transition-all shadow-sm whitespace-nowrap">
-                    <iconify-icon icon="solar:chat-round-dots-bold" width="16"></iconify-icon>
-                    Nhắn tin đặt bánh
-                </a>
             </div>
         </div>
     </header>
@@ -107,8 +102,9 @@
         </h1>
         <p class="text-slate-500 text-base max-w-xl mx-auto leading-relaxed">
             Mỗi chiếc bánh là một tác phẩm — được làm thủ công từ nguyên liệu nhập khẩu.<br>
-            Xem, chọn, và nhắn tin cho chúng tôi để đặt hàng.
+            Xem, chọn, và nhắn tin cho chúng tôi để làm ngay đơn cho bạn.
         </p>
+        <span>( có thể đặt mẫu bánh bất kì mà bạn muốn )</span>
     </section>
 
     <!-- =================== FILTER =================== -->
@@ -156,10 +152,19 @@
                 <img src="images/logo.png" alt="logo" onerror="this.style.display='none'" class="h-7 w-7 object-contain rounded-full">
                 <span class="serif text-xl font-semibold text-slate-900">sweety.bynhi <span class="font-normal text-sm text-slate-400 ml-1">© 2025</span></span>
             </a>
-            <div class="flex gap-6 text-sm text-slate-500">
-                <a href="https://www.tiktok.com/@sweety.bynhi?lang=vi-VN" target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 transition-colors">TikTok</a>
-                <a href="https://www.facebook.com/profile.php?id=61577748808387" target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 transition-colors">Facebook</a>
-                <a href="https://www.threads.net/@sweetyby.nhi?xmt=AQF0En4p_EjVsn3WDf22Hos-WvosNhJgadcspPRnC6gGxIg" target="_blank" rel="noopener noreferrer" class="hover:text-slate-900 transition-colors">Threads</a>
+            <div class="flex flex-wrap items-center justify-center gap-3 text-sm">
+                <a href="https://www.tiktok.com/@sweety.bynhi?lang=vi-VN" target="_blank" rel="noopener noreferrer" 
+                   class="px-4 py-1.5 rounded-full border-2 border-slate-900 font-bold text-slate-900 hover:bg-slate-900 hover:text-white transition-all">
+                   TikTok
+                </a>
+                <a href="https://www.facebook.com/profile.php?id=61577748808387" target="_blank" rel="noopener noreferrer" 
+                   class="px-4 py-1.5 rounded-full border-2 border-slate-900 font-bold text-slate-900 hover:bg-slate-900 hover:text-white transition-all">
+                   Facebook
+                </a>
+                <a href="https://www.threads.net/@sweetyby.nhi?xmt=AQF0En4p_EjVsn3WDf22Hos-WvosNhJgadcspPRnC6gGxIg" target="_blank" rel="noopener noreferrer" 
+                   class="px-4 py-1.5 rounded-full border-2 border-slate-900 font-bold text-slate-900 hover:bg-slate-900 hover:text-white transition-all">
+                   Threads
+                </a>
             </div>
         </div>
     </footer>
@@ -485,6 +490,12 @@
             
             document.getElementById('product-modal').classList.remove('opacity-0', 'pointer-events-none');
             const box = document.getElementById('modal-box');
+
+            // Ẩn các nút lơ lửng khi mở modal
+            document.getElementById('fab-messenger').style.opacity = '0';
+            document.getElementById('fab-messenger').style.pointerEvents = 'none';
+            document.getElementById('scroll-top-btn').classList.remove('visible');
+
             requestAnimationFrame(() => {
                 box.classList.remove('opacity-0', 'scale-95');
                 box.classList.add('opacity-100', 'scale-100');
@@ -504,6 +515,12 @@
             const box = document.getElementById('modal-box');
             box.classList.add('opacity-0', 'scale-95');
             box.classList.remove('opacity-100', 'scale-100');
+
+            // Hiện lại các nút lơ lửng
+            document.getElementById('fab-messenger').style.opacity = '1';
+            document.getElementById('fab-messenger').style.pointerEvents = 'auto';
+            // Nút cuộn lên sẽ tự hiện lại qua sự kiện scroll nếu cần
+
             setTimeout(() => {
                 document.getElementById('product-modal').classList.add('opacity-0', 'pointer-events-none');
                 document.body.style.overflow = '';
