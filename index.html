@@ -484,9 +484,9 @@
             const messageText = `Chào shop, mình muốn đặt bánh: ${name}\nLink mẫu: ${fullImgUrl}`;
             currentProductInfo = messageText;
 
-            // Link Messenger (sử dụng link thay thế cho mobile app ổn định hơn)
+            // Link Messenger (Dùng m.me để ưu tiên mở ứng dụng trên điện thoại)
             const encodedMsg = encodeURIComponent(messageText);
-            document.getElementById('modal-order-btn').href = `https://www.facebook.com/messages/t/61577748808387?text=${encodedMsg}`;
+            document.getElementById('modal-order-btn').href = `https://m.me/61577748808387?text=${encodedMsg}`;
             
             document.getElementById('product-modal').classList.remove('opacity-0', 'pointer-events-none');
             const box = document.getElementById('modal-box');
